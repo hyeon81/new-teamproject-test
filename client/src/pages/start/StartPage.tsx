@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./StartPage.css";
+import "../global.css";
 import { AiOutlineLeft, AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
 import { BsFillArrowRightCircleFill, BsPlusSquare } from "react-icons/bs";
 

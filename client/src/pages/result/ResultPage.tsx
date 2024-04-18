@@ -1,9 +1,8 @@
-import React from "react";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
-import mbti from "../json/mbtiresult";
+import mbti from "../../json/mbtiresult.json";
 import { AiOutlineLeft, AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
 import { BsPlusSquare } from "react-icons/bs";
-import "./StartPage.css";
+import "../global.css";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 function ResultPage() {
