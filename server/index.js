@@ -1,7 +1,5 @@
-import {ApolloServer, gql} from "apollo-server-practice";
 import {PrismaClient} from '@prisma/client'
-
-const client = new PrismaClient();
+import {ApolloServer, gql} from "apollo-server";
 
 const typeDefs = gql`
     type Question {
@@ -23,6 +21,8 @@ const typeDefs = gql`
     deleteQuestion(id: Int!): Question
 }
 `;
+
+const client = new PrismaClient();
 
 const resolvers = {
     Query: {
