@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Test {
+  id          Int        @id @default(autoincrement())
+  title       String
+  mainColor   String
+  backColor   String
+  description String
+  questions   Question[]
+  results     Result[]
+}
+
+model Question {
+  id        Int    @id @default(autoincrement())
+  option    String
+  question1 String
+  question2 String
+  answers   String @db.VarChar(1000)
+  Test      Test?  @relation(fields: [testId], references: [id])
+  testId    Int?
+}
+
+model Result {
+  id              Int     @id @default(autoincrement())
+  testId          Int
+  subhead         String
+  nickname1       String
+  nickname2       String
+  img             String
+  description     String  @db.VarChar(1000)
+  test            Test    @relation(fields: [testId], references: [id])
+  duoResult       Result? @relation("DuoResult", fields: [duoResultId], references: [id])
+  counterResult   Result? @relation("CounterResult", fields: [counterResultId], references: [id])
+  duoResultId     Int?    @unique // 일대일 관계를 정의하려면 관련된 필드 중 하나가 고유해야 합니다. 
+  counterResultId Int?    @unique
+  duoResultOf     Result? @relation("DuoResult")
+  counterResultOf Result? @relation("CounterResult")
+}
