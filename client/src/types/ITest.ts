@@ -1,15 +1,15 @@
 export interface ITest {
-  id: number;
+  id?: number;
   title: string;
   mainColor: string;
   backColor: string;
   description: string;
-  questions: IQuestion[];
-  results: IResult[];
+  questions?: IQuestion[];
+  results?: IResult[];
 }
 
 export interface IQuestion {
-  id: number;
+  id?: number;
   option: string;
   question1: string;
   question2: string;
@@ -17,7 +17,7 @@ export interface IQuestion {
 }
 
 export interface IResult {
-  id: number;
+  id?: number;
   testId: number;
   subhead: string;
   nickname1: string;

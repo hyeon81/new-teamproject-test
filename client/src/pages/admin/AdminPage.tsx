@@ -22,6 +22,7 @@ function AdminPage() {
     <div>
       <h1>Admin</h1>
       <h2>테스트 목록</h2>
+      <button onClick={() => navigate("/admin/create")}>테스트 생성</button>
       <table style={{ width: "100%" }}>
         <thead>
           <tr>
