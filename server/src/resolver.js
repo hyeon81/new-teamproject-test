@@ -37,12 +37,19 @@ export const resolvers = {
     },
   },
   Mutation: {
-    createQuestion: (_, { option, question1, question2, answers }) => {
+    createQuestion: (_, { testId, option, question1, question2, answers }) => {
       return client.question.create({
-        data: { option, question1, question2, answers },
+        data: {
+          option,
+          question1,
+          question2,
+          answers,
+          Test: { connect: { id: testId } },
+        },
       });
     },
     updateQuestion: (_, { id, option, question1, question2, answers }) => {
+      console.log("answers", "id", answers, id);
       return client.question.update({
         where: { id },
         data: { option, question1, question2, answers },
@@ -51,9 +58,14 @@ export const resolvers = {
     deleteQuestion: (_, { id }) => {
       return client.question.delete({ where: { id } });
     },
-    createTest: (_, { title, description }) => {
+    createTest: (_, { title, description, mainColor, backColor }) => {
       return client.test.create({
-        data: { title, description },
+        data: {
+          title,
+          description,
+          mainColor,
+          backColor,
+        },
       });
     },
     updateTest: (_, { id, title, description }) => {
@@ -84,35 +96,6 @@ export const resolvers = {
     },
     deleteResult: (_, { id }) => {
       return client.result.delete({ where: { id } });
-    },
-    addQuestionToTest: (
-      _,
-      { testId, option, question1, question2, answers },
-    ) => {
-      return client.question.create({
-        data: {
-          option,
-          question1,
-          question2,
-          answers,
-          Test: { connect: { id: testId } },
-        },
-      });
-    },
-    addResultToTest: (
-      _,
-      { testId, subhead, nickname1, nickname2, img, description },
-    ) => {
-      return client.result.create({
-        data: {
-          subhead,
-          nickname1,
-          nickname2,
-          img,
-          description,
-          Test: { connect: { id: testId } },
-        },
-      });
     },
   },
 };

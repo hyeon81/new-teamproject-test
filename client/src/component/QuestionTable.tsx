@@ -8,9 +8,10 @@ import {
 } from "../pages/admin/graphql";
 import { useParams } from "react-router-dom";
 
-export const QuestionTable = ({ datas }: { datas: IQuestion[] }) => {
-  console.log("data", datas);
+export const QuestionTable = ({ data }: { data: IQuestion[] }) => {
+  console.log("data", data);
   const params = useParams();
+  console.log("prams", params?.id);
   const [formData, setFormData] = useState({
     id: "",
     option: "",
@@ -19,12 +20,12 @@ export const QuestionTable = ({ datas }: { datas: IQuestion[] }) => {
   });
   const [answerData, setAnswerData] = useState<IAnswer[]>([
     {
-      id: "",
       type: "",
       content1: "",
       content2: "",
     },
   ]);
+  console.log("answerData", answerData);
   const [edit, setEdit] = useState(false);
   const [updateQuestion] = useMutation(UPDATE_QUESTION);
   const [deleteQuestion] = useMutation(DELETE_QUESTION);
@@ -58,33 +59,58 @@ export const QuestionTable = ({ datas }: { datas: IQuestion[] }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await updateQuestion({
-      variables: {
-        id: Number(params?.id),
-        option: formData.option,
-        question1: formData.question1,
-        question2: formData.question2,
-        answers: JSON.stringify(answerData),
-      },
-    });
-    setFormData({
-      id: "",
-      option: "",
-      question1: "",
-      question2: "",
-    });
-    setAnswerData([
-      {
+    try {
+      console.log("answerData2", answerData);
+      if (!edit) {
+        console.log("createQuestion", {
+          option: formData.option,
+          question1: formData.question1,
+          question2: formData.question2,
+          answers: JSON.stringify(answerData),
+          testId: Number(params?.id),
+        });
+        await createQuestion({
+          variables: {
+            option: formData.option,
+            question1: formData.question1,
+            question2: formData.question2,
+            answers: JSON.stringify(answerData),
+            testId: Number(params?.id),
+          },
+        });
+      } else {
+        await updateQuestion({
+          variables: {
+            id: Number(formData.id),
+            option: formData.option,
+            question1: formData.question1,
+            question2: formData.question2,
+            answers: JSON.stringify(answerData),
+          },
+        });
+      }
+      setFormData({
         id: "",
-        type: "",
-        content1: "",
-        content2: "",
-      },
-    ]);
-    setEdit(false);
+        option: "",
+        question1: "",
+        question2: "",
+      });
+      setAnswerData([
+        {
+          type: "",
+          content1: "",
+          content2: "",
+        },
+      ]);
+      setEdit(false);
+      alert(edit ? "질문이 수정되었습니다." : "질문이 생성되었습니다.");
+    } catch (e) {
+      console.error(e);
+      alert("에러가 발생했습니다.");
+    }
   };
-  const keyList = ["id", "option", "question1", "question2"];
-  const answersKeyList = ["id", "type", "content1", "content2"];
+  const keyList = ["option", "question1", "question2"];
+  const answersKeyList = ["type", "content1", "content2"];
   return (
     <>
       {/*question form*/}
@@ -98,6 +124,7 @@ export const QuestionTable = ({ datas }: { datas: IQuestion[] }) => {
               type="text"
               placeholder={key}
               disabled={key === "id"}
+              maxLength={key === "option" ? 1 : undefined}
               value={formData[key]}
               onChange={(e) =>
                 handleInput(key, (e.target as HTMLInputElement).value)
@@ -108,7 +135,7 @@ export const QuestionTable = ({ datas }: { datas: IQuestion[] }) => {
         <h3>Answer</h3>
         {answerData.map((answer, idx) => {
           return (
-            <div>
+            <div key={idx}>
               {answersKeyList.map((key) => (
                 <div key={key}>
                   <label>{key}</label>
@@ -140,6 +167,19 @@ export const QuestionTable = ({ datas }: { datas: IQuestion[] }) => {
         {edit && (
           <button
             onClick={() => {
+              setFormData({
+                id: "",
+                option: "",
+                question1: "",
+                question2: "",
+              });
+              setAnswerData([
+                {
+                  type: "",
+                  content1: "",
+                  content2: "",
+                },
+              ]);
               setEdit(false);
             }}
           >
@@ -162,33 +202,45 @@ export const QuestionTable = ({ datas }: { datas: IQuestion[] }) => {
           </tr>
         </thead>
         <tbody>
-          {datas?.map((data) => (
-            <tr key={data.id}>
+          {data?.map((v, idx) => (
+            <tr key={v.id}>
               {keyList.map((key) => (
-                <td>{data[key]}</td>
+                <td>{v[key]}</td>
               ))}
               <td>
                 <table>
                   <thead>
                     {keyList.map((key) => (
-                      <td>{key}</td>
+                      <td>
+                        <strong>{key}</strong>
+                      </td>
                     ))}
                   </thead>
+                  <tbody>
+                    {JSON.parse(v?.answers)?.map((answer) => (
+                      <tr>
+                        {answersKeyList.map((key) => (
+                          <td>{answer[key]}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               </td>
               <th>
                 <button
                   type="button"
                   onClick={() => {
-                    setFormData(data);
-                    setAnswerData(data?.answers);
+                    setFormData(data?.[idx]);
+                    setAnswerData(JSON.parse(data?.[idx]?.answers));
+                    setEdit(true);
                   }}
                 >
                   수정
                 </button>
                 <button
                   type="button"
-                  onClick={() => deleteQuestion(Number(data?.id))}
+                  onClick={() => deleteQuestion(Number(v?.id))}
                 >
                   삭제
                 </button>

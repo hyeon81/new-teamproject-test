@@ -19,6 +19,7 @@ export interface IQuestion {
 export interface IResult {
   id?: number;
   testId: number;
+  name: string;
   subhead: string;
   nickname1: string;
   nickname2: string;

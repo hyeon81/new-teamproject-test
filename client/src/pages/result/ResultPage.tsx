@@ -1,44 +1,39 @@
-import { useSearchParams, Link, useNavigate } from "react-router-dom";
+import {
+  useSearchParams,
+  Link,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import mbti from "../../json/mbtiresult.json";
 import { AiOutlineLeft, AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
 import { BsPlusSquare } from "react-icons/bs";
 import "../global.css";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import React from "react";
+import { useQuery } from "@apollo/client";
+import { GET_TEST } from "../admin/graphql";
 
 function ResultPage() {
   let [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const params = searchParams.get("res");
+  const res = searchParams.get("res");
+  const params = useParams();
   const input_name = searchParams.get("name");
-  let e = 0,
-    s = 0,
-    t = 0,
-    j = 0;
 
-  for (let c = 0; c <= params.length; c++) {
-    if (params[c] === "E") e++;
-    else if (params[c] === "S") s++;
-    else if (params[c] === "T") t++;
-    else if (params[c] === "J") j++;
-  }
+  const { loading, error, data } = useQuery(GET_TEST, {
+    variables: { id: Number(params?.id) },
+    skip: !params?.id,
+  });
 
-  let result = [
-    e >= 2 ? "E" : "I",
-    s >= 2 ? "S" : "N",
-    t >= 2 ? "T" : "F",
-    j >= 2 ? "J" : "P",
-  ];
+  // let result = [
+  //   e >= 2 ? "E" : "I",
+  //   s >= 2 ? "S" : "N",
+  //   t >= 2 ? "T" : "F",
+  //   j >= 2 ? "J" : "P",
+  // ];
 
-  let count;
-  outer: for (count = 0; count < 16; count++) {
-    for (let i = 0; i < 4; i++) {
-      if (mbti[count].id[i] !== result[i]) {
-        break;
-      } else if (i === 3) {
-        break outer;
-      }
-    }
-  }
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
 
   return (
     <>
@@ -58,7 +53,7 @@ function ResultPage() {
           <div className="result">
             <div className="outcome">
               <h3>
-                조별 과제 속 <span>{input_name}</span>님의 모습은?
+                <span>{input_name}</span>님의 모습은?
               </h3>
               <h3>{mbti[count].nickname1}</h3>
               <h2>{mbti[count].nickname2}</h2>
@@ -74,30 +69,6 @@ function ResultPage() {
                 {mbti[count].description.map((item) => (
                   <li key={item.des}>{item.des}</li>
                 ))}
-              </div>
-            </div>
-            <div className="detail">
-              <div className="duo">
-                <h1>나와 잘 어울리는 팀원은?</h1>
-                <img
-                  src={mbti[count].duo.img}
-                  alt="결과 이미지"
-                  width="150px"
-                  height="150px"
-                />
-                <h2>{mbti[count].duo.nickname1}</h2>
-                <h3>{mbti[count].duo.nickname2}</h3>
-              </div>
-              <div className="counter">
-                <h1>나와 안 어울리는 팀원은?</h1>
-                <img
-                  src={mbti[count].counter.img}
-                  alt="결과 이미지"
-                  width="150px"
-                  height="150px"
-                />
-                <h2>{mbti[count].counter.nickname1}</h2>
-                <h3>{mbti[count].counter.nickname2}</h3>
               </div>
             </div>
           </div>

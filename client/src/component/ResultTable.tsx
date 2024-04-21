@@ -9,17 +9,21 @@ import {
   UPDATE_QUESTION,
   UPDATE_RESULT,
 } from "../pages/admin/graphql";
+import { useParams } from "react-router-dom";
 
-const ResultTable = ({ datas }: { datas: IResult[] }) => {
-  console.log("result", datas);
-  const [formData, setFormData] = useState({
+const ResultTable = ({ data }: { data: IResult[] }) => {
+  console.log("result", data);
+  const params = useParams();
+  const [formData, setFormData] = useState<IResult>({
     id: "",
-    option: "",
-    question1: "",
-    question2: "",
+    description: "",
+    subhead: "",
+    name: "",
+    nickname1: "",
+    nickname2: "",
+    img: "",
   });
-
-  const [editingId, setEditingId] = useState(null); // 수정 중인 질문의 ID
+  const [edit, setEdit] = useState(false);
   const [updateResult] = useMutation(UPDATE_RESULT);
   const [deleteResult] = useMutation(DELETE_RESULT);
   const [createResult] = useMutation(CREATE_RESULT);
@@ -28,31 +32,66 @@ const ResultTable = ({ datas }: { datas: IResult[] }) => {
     setFormData({ ...formData, [key]: value });
   };
 
+  const resetForm = () => {
+    setFormData({
+      id: "",
+      description: "",
+      subhead: "",
+      name: "",
+      nickname1: "",
+      nickname2: "",
+      img: "",
+    });
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editingId) {
-      await updateResult({
-        variables: {
-          id: editingId,
-          ...formData,
-        },
-      });
-    } else {
-      await createResult({
-        variables: {
-          ...formData,
-        },
-      });
+    try {
+      if (edit) {
+        await updateResult({
+          variables: {
+            ...formData,
+          },
+        });
+      } else {
+        await createResult({
+          variables: {
+            ...formData,
+            testId: Number(params?.id),
+          },
+        });
+      }
+      resetForm();
+      alert(edit ? "수정되었습니다." : "생성되었습니다.");
+    } catch (e) {
+      console.error(e);
+      alert("에러가 발생했습니다.");
     }
   };
+
+  const removeResult = async (id: number) => {
+    try {
+      await deleteResult({
+        variables: {
+          id: id,
+        },
+      });
+      alert("삭제되었습니다.");
+    } catch (e) {
+      console.error(e);
+      alert("에러가 발생했습니다.");
+    }
+  };
+
   const keyList = [
     "id",
     "description",
+    "name",
     "subhead",
     "nickname1",
     "nickname2",
     "img",
   ];
+
   return (
     <>
       {/*question form*/}
@@ -66,24 +105,25 @@ const ResultTable = ({ datas }: { datas: IResult[] }) => {
               type="text"
               placeholder={key}
               disabled={key === "id"}
-              value={formData[key]}
+              value={formData?.[key]}
               onChange={(e) =>
                 handleInput(key, (e.target as HTMLInputElement).value)
               }
             />
           </div>
         ))}
-        {editingId && (
+        {edit && (
           <button
             onClick={() => {
-              setEditingId(null);
+              setEdit(false);
+              resetForm();
             }}
           >
             취소
           </button>
         )}
         <button type="submit" className={"edit-button"}>
-          {editingId ? "결과 수정" : "결과 생성"}
+          {edit ? "결과 수정" : "결과 생성"}
         </button>
       </form>
       {/*question list*/}
@@ -93,28 +133,25 @@ const ResultTable = ({ datas }: { datas: IResult[] }) => {
             {keyList.map((key) => (
               <th>{key}</th>
             ))}
-            <th>answers</th>
             <th>관리</th>
           </tr>
         </thead>
         <tbody>
-          {datas?.map((data) => (
-            <tr key={data.id}>
+          {data?.map((v) => (
+            <tr key={v.id}>
               {keyList.map((key) => (
-                <td>{data[key]}</td>
+                <td>{v[key]}</td>
               ))}
-              <td>
-                <table>
-                  <thead>
-                    {keyList.map((key) => (
-                      <td>{key}</td>
-                    ))}
-                  </thead>
-                </table>
-              </td>
               <th>
-                <button>수정</button>
-                <button>삭제</button>
+                <button
+                  onClick={() => {
+                    setFormData(v);
+                    setEdit(true);
+                  }}
+                >
+                  수정
+                </button>
+                <button onClick={() => removeResult(v.id)}>삭제</button>
               </th>
             </tr>
           ))}

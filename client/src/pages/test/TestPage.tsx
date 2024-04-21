@@ -1,25 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLeft, AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
 import { BsPlusSquare } from "react-icons/bs";
 import { gql, useQuery } from "@apollo/client";
+import { GET_TEST } from "../admin/graphql";
 
 function TestPage() {
-  const GET_QUESTIONS = gql`
-    query GetQuestions {
-      questions {
-        id
-        option
-        question1
-        question2
-        answers
-      }
-    }
-  `;
-
-  const { loading, error, data } = useQuery(GET_QUESTIONS);
-  const questions = data?.questions;
-  console.log("question", questions);
+  const params = useParams();
+  const { loading, error, data } = useQuery(GET_TEST, {
+    variables: { id: Number(params?.id) },
+    skip: !params?.id,
+  });
+  const questions = data?.test?.questions;
   let [searchParams, setSearchParams] = useSearchParams();
   const [num, setNum] = useState(searchParams.get("res")?.length ?? 0);
   const [mbti, setMbti] = useState(searchParams.get("res")?.split("") ?? []);
@@ -41,7 +33,7 @@ function TestPage() {
     if (len < questions?.length ?? 0)
       setNum(searchParams.get("res")?.length ?? 0);
     else {
-      navigate("/result?" + searchParams.toString());
+      navigate("/result/" + params?.id + searchParams.toString());
     }
   }, [searchParams]);
 
@@ -54,10 +46,20 @@ function TestPage() {
 
   return (
     <>
-      <div className="frame">
+      <div
+        className="frame"
+        style={{
+          backgroundColor: data?.test.backColor,
+        }}
+      >
         <div className="gnb">
           <div className="icon-right">
-            <button onClick={() => navigate(-1)}>
+            <button
+              onClick={() => navigate(-1)}
+              style={{
+                backgroundColor: data?.test.backColor,
+              }}
+            >
               <AiOutlineLeft size="28" />
             </button>
           </div>
@@ -68,14 +70,19 @@ function TestPage() {
         </div>
         <div className="wrap">
           <div className="question">
-            <h1>Q{questions[num]?.id}</h1>
+            <h1>Q{questions?.[num]?.id}</h1>
             <p>
-              {questions[num]?.question1}
+              {questions?.[num]?.question1}
               <br />
-              <span>{questions[num]?.question2}</span>
+              <span>{questions?.[num]?.question2}</span>
             </p>
             {answers?.map((answer, idx) => (
-              <button onClick={() => nextSlide(idx)}>
+              <button
+                onClick={() => nextSlide(idx)}
+                style={{
+                  backgroundColor: data?.test.mainColor,
+                }}
+              >
                 {answer?.content1}
                 <br />
                 <span>{answer?.content2}</span>

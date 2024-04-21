@@ -18,6 +18,9 @@ function AdminPage() {
   const navigate = useNavigate();
   console.log("data", data);
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
   return (
     <div>
       <h1>Admin</h1>
@@ -42,9 +45,13 @@ function AdminPage() {
                   {test?.title}
                 </div>
               </td>
-              <td>{test?.mainColor}</td>
-              <td>{test?.backColor}</td>
               <td>{test?.description}</td>
+              <td style={{ backgroundColor: test?.mainColor }}>
+                {test?.mainColor}
+              </td>
+              <td style={{ backgroundColor: test?.backColor }}>
+                {test?.backColor}
+              </td>
             </tr>
           ))}
         </tbody>

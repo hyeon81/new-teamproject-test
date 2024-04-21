@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import React from "react";
 import { QuestionTable } from "../../component/QuestionTable";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import ResultTable from "../../component/ResultTable";
 import TestInfo from "../../component/TestInfo";
 
@@ -19,21 +19,23 @@ const AdminDetailPage = () => {
     variables: { id: Number(params?.id) },
     skip: !params?.id,
   });
+  const navigate = useNavigate();
   console.log("data2", data);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
-
+  console.log("data?.question", data?.test.questions);
   return (
     <div className="question-list">
       <h2>Admin Page</h2>
+      <button onClick={() => navigate("/admin")}>목록으로</button>
       <h3>{params?.id ? "테스트 수정" : "테스트 생성"}</h3>
       <h3>테스트 정보</h3>
       <TestInfo data={data?.test} />
-      {/*<h3>질문 목록</h3>*/}
-      {/*<QuestionTable data={questionData} />*/}
-      {/*<h3>결과 목록</h3>*/}
-      {/*<ResultTable data={resultData} setData={setResultData} />*/}
+      <h3>질문 목록</h3>
+      <QuestionTable data={data?.test?.questions} />
+      <h3>결과 목록</h3>
+      <ResultTable data={data?.test?.results} />
     </div>
   );
 };

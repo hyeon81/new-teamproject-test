@@ -9,7 +9,7 @@ ol, ul {
 
 /* home */
 .frame {
-    background-color: rgba(178, 199, 217, 1);
+    /*background-color: rgba(178, 199, 217, 1);*/
     width: 500px;
     height: 100vh;
     margin: 0px auto;
@@ -28,7 +28,7 @@ ol, ul {
 }
 
 .icon-right button {
-    background-color: rgba(178, 199, 217, 1);
+    /*background-color: rgba(178, 199, 217, 1);*/
     border: none;
 }
 .search_icon {
@@ -90,7 +90,7 @@ ol, ul {
     justify-content: center;
     margin: 2px auto;
     gap: 4px;
-    background-color: rgba(254, 229, 0, 1);
+    /*background-color: rgba(254, 229, 0, 1);*/
     border: none;
     transition: 0.2s;
 }
@@ -171,7 +171,7 @@ ol, ul {
 }
 
 .question button:hover {
-    background-color: #fee500;
+    /*background-color: #fee500;*/
     transform: scale(1.02);
 }
 

@@ -31,25 +31,31 @@ const TestInfo = ({ data }: { data: ITest }) => {
   const handleSubmit = async (e) => {
     console.log("formData", formData);
     e.preventDefault();
-    if (editMode) {
-      await updateTest({
-        variables: {
-          id: Number(params?.id),
-          title: formData.title,
-          description: formData.description,
-          mainColor: formData.mainColor,
-          backColor: formData.backColor,
-        },
-      });
-    } else {
-      await createTest({
-        variables: {
-          title: formData.title,
-          description: formData.description,
-          mainColor: formData.mainColor,
-          backColor: formData.backColor,
-        },
-      });
+    try {
+      if (editMode) {
+        await updateTest({
+          variables: {
+            id: Number(params?.id),
+            title: formData.title,
+            description: formData.description,
+            mainColor: formData.mainColor,
+            backColor: formData.backColor,
+          },
+        });
+      } else {
+        await createTest({
+          variables: {
+            title: formData.title,
+            description: formData.description,
+            mainColor: formData.mainColor,
+            backColor: formData.backColor,
+          },
+        });
+      }
+      alert(editMode ? "수정되었습니다." : "생성되었습니다.");
+    } catch (e) {
+      console.error(e);
+      alert("에러가 발생했습니다.");
     }
   };
 

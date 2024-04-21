@@ -18,6 +18,8 @@ const GET_TESTS = gql`
       id
       title
       description
+      mainColor
+      backColor
     }
   }
 `;
@@ -41,6 +43,7 @@ const GET_TEST = gql`
         id
         testId
         subhead
+        name
         nickname1
         nickname2
         img
@@ -51,15 +54,22 @@ const GET_TEST = gql`
 `;
 
 const GET_RESULTS = gql`
-  query GetResults {
-    results {
-      id
-      testId
-      subhead
-      nickname1
-      nickname2
-      img
-      description
+  query GetTest($id: Int!) {
+    test(id: $id) {
+      questions {
+        id
+        option
+      }
+      results {
+        id
+        testId
+        name
+        subhead
+        nickname1
+        nickname2
+        img
+        description
+      }
     }
   }
 `;
@@ -69,6 +79,7 @@ const GET_RESULT = gql`
     result(id: $id) {
       id
       testId
+      name
       subhead
       nickname1
       nickname2
@@ -84,12 +95,14 @@ const CREATE_QUESTION = gql`
     $question1: String!
     $question2: String!
     $answers: String!
+    $testId: Int!
   ) {
     createQuestion(
       option: $option
       question1: $question1
       question2: $question2
       answers: $answers
+      testId: $testId
     ) {
       id
       option
@@ -190,6 +203,7 @@ const CREATE_RESULT = gql`
   mutation CreateResult(
     $testId: Int!
     $subhead: String!
+    $name: String!
     $nickname1: String!
     $nickname2: String!
     $img: String!
@@ -197,6 +211,7 @@ const CREATE_RESULT = gql`
   ) {
     createResult(
       testId: $testId
+      name: $name
       subhead: $subhead
       nickname1: $nickname1
       nickname2: $nickname2
@@ -218,6 +233,7 @@ const UPDATE_RESULT = gql`
   mutation UpdateResult(
     $id: Int!
     $testId: Int
+    $name: String
     $subhead: String
     $nickname1: String
     $nickname2: String
@@ -227,6 +243,7 @@ const UPDATE_RESULT = gql`
     updateResult(
       id: $id
       testId: $testId
+      name: $name
       subhead: $subhead
       nickname1: $nickname1
       nickname2: $nickname2
@@ -247,48 +264,6 @@ const UPDATE_RESULT = gql`
 const DELETE_RESULT = gql`
   mutation DeleteResult($id: Int!) {
     deleteResult(id: $id) {
-      id
-    }
-  }
-`;
-
-const ADD_QUESTION_TO_TEST = gql`
-  mutation addQuestionToTest(
-    $testId: Int!
-    $option: String!
-    $question1: String!
-    $question2: String!
-    $answers: String!
-  ) {
-    addQuestionToTest(
-      testId: $testId
-      option: $option
-      question1: $question1
-      question2: $question2
-      answers: $answers
-    ) {
-      id
-    }
-  }
-`;
-
-const ADD_RESULT_TO_TEST = gql`
-  mutation addResultToTest(
-    $testId: Int!
-    $subhead: String!
-    $nickname1: String!
-    $nickname2: String!
-    $img: String!
-    $description: String!
-  ) {
-    addResultToTest(
-      testId: $testId
-      subhead: $subhead
-      nickname1: $nickname1
-      nickname2: $nickname2
-      img: $img
-      description: $description
-    ) {
       id
     }
   }
