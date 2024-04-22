@@ -50,13 +50,16 @@ const ResultTable = ({ data }: { data: IResult[] }) => {
         await updateResult({
           variables: {
             ...formData,
+            description: JSON.stringify(formData.description),
           },
         });
       } else {
         await createResult({
           variables: {
             ...formData,
+            id: undefined,
             testId: Number(params?.id),
+            description: JSON.stringify(formData.description),
           },
         });
       }
@@ -140,7 +143,7 @@ const ResultTable = ({ data }: { data: IResult[] }) => {
           {data?.map((v) => (
             <tr key={v.id}>
               {keyList.map((key) => (
-                <td>{v[key]}</td>
+                <td>{key === "description" ? JSON.parse(v[key]) : v[key]}</td>
               ))}
               <th>
                 <button

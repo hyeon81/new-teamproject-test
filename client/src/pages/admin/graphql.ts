@@ -53,6 +53,18 @@ const GET_TEST = gql`
   }
 `;
 
+const GET_TEST_INFO = gql`
+  query GetTestInfo($id: Int!) {
+    test(id: $id) {
+      id
+      title
+      description
+      mainColor
+      backColor
+    }
+  }
+`;
+
 const GET_RESULTS = gql`
   query GetTest($id: Int!) {
     test(id: $id) {
@@ -269,6 +281,19 @@ const DELETE_RESULT = gql`
   }
 `;
 
+const GET_CALC_RESULT = gql`
+  query getCalcResult($testId: Int!, $res: String!) {
+    calcResult(testId: $testId, res: $res) {
+      name
+      subhead
+      nickname1
+      nickname2
+      img
+      description
+    }
+  }
+`;
+
 export {
   GET_QUESTIONS,
   GET_TEST,
@@ -284,4 +309,6 @@ export {
   CREATE_RESULT,
   UPDATE_RESULT,
   DELETE_RESULT,
+  GET_CALC_RESULT,
+  GET_TEST_INFO,
 };

@@ -50,7 +50,7 @@ function StartPage() {
           </div>
         </div>
         <div className="wrap">
-          <div className="title">
+          <div className="title" style={{ padding: 10 }}>
             <h1>{data?.test.title}</h1>
             <p>{data?.test.description}</p>
           </div>

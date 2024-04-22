@@ -204,13 +204,13 @@ ol, ul {
 
 .detail h1 {
     font-size: 14px;
-    color: #7f9cb6;
+    /*color: #7f9cb6;*/
 }
 
 .detail h2 {
     font-size: 14px;
     font-weight: normal;
-    color: #727272;
+    /*color: #727272;*/
 }
 
 .detail h3 {
@@ -250,12 +250,12 @@ ol, ul {
     border-radius: 20px;
     width: 360px;
     margin: 10px auto;
-    color: #a7bbcb;
+    /*color: #a7bbcb;*/
     /*color: white;*/
 }
 
 .outcome h3 span {
-    color: #7f9cb6;
+    /*color: #7f9cb6;*/
 }
 
 .outcome h3:nth-child(2) {
@@ -263,7 +263,7 @@ ol, ul {
     border-radius: 20px;
     width: 360px;
     margin: 8px auto 2px;
-    color: #2b2b2b;
+    /*color: #2b2b2b;*/
     font-weight: normal;
     font-size: 16px;
     /*color: white;*/
@@ -280,13 +280,13 @@ ol, ul {
     font-size: 24px;
     font-weight: bold;
     margin: 0px auto 18px;
-    color: #4a5b6a;
+    /*color: #4a5b6a;*/
 }
 
 .des span {
     font-weight: bold;
     font-size: 14px;
-    color: #4a5b6a;
+    /*color: #4a5b6a;*/
 }
 
 .des {
@@ -295,7 +295,7 @@ ol, ul {
     width: 320px;
     font-size: 14px;
     line-height: 24px;
-    color: #727272;
+    /*color: #727272;*/
     border-radius: 20px;
     text-align: justify;
 }
@@ -316,9 +316,6 @@ ol, ul {
     transition: 0.2s;
 }
 
-.btn button:hover {
-    background-color: rgba(254, 229, 0, 1);
-}
 
 .btn button p {
     line-height: 14px;

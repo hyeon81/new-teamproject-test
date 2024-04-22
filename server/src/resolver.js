@@ -35,6 +35,48 @@ export const resolvers = {
     result: (_, { id }) => {
       return client.result.findUnique({ where: { id } });
     },
+    calcResult: async (_, { testId, res }) => {
+      // testId와 resQuery를 이용하여 데이터를 가져오는 로직을 작성한다.
+      // 예를 들어, testId와 resQuery를 이용하여 결과를 계산하고 반환한다.
+      const results = await client.result.findMany({
+        where: {
+          testId,
+        },
+      });
+      const questions = await client.question.findMany({
+        where: {
+          testId,
+        },
+        select: {
+          option: true,
+        },
+      });
+      const optionList = new Set(questions.map((question) => question.option));
+      const resultList = new Set(results);
+      let resCount = {};
+      for (let i = 0; i < res.length; i++) {
+        if (resCount[res[i]] === undefined) resCount[res[i]] = 1;
+        else resCount[res[i]] += 1;
+      }
+
+      let result = "";
+      optionList.forEach((option) => {
+        const option1 = option[0];
+        const option2 = option[1];
+        if (resCount[option1] > resCount[option2]) {
+          result += option1;
+        } else {
+          result += option2;
+        }
+      });
+      const resultArr = [...result];
+      for (const r of resultList) {
+        if (resultArr.every((v) => r.name.includes(v))) {
+          return r;
+        }
+      }
+      return undefined;
+    },
   },
   Mutation: {
     createQuestion: (_, { testId, option, question1, question2, answers }) => {
@@ -49,7 +91,6 @@ export const resolvers = {
       });
     },
     updateQuestion: (_, { id, option, question1, question2, answers }) => {
-      console.log("answers", "id", answers, id);
       return client.question.update({
         where: { id },
         data: { option, question1, question2, answers },
@@ -68,10 +109,10 @@ export const resolvers = {
         },
       });
     },
-    updateTest: (_, { id, title, description }) => {
+    updateTest: (_, { id, title, description, mainColor, backColor }) => {
       return client.test.update({
         where: { id },
-        data: { title, description },
+        data: { title, description, mainColor, backColor },
       });
     },
     deleteTest: (_, { id }) => {
@@ -79,10 +120,10 @@ export const resolvers = {
     },
     createResult: (
       _,
-      { testId, subhead, nickname1, nickname2, img, description },
+      { testId, subhead, nickname1, nickname2, img, description, name },
     ) => {
       return client.result.create({
-        data: { testId, subhead, nickname1, nickname2, img, description },
+        data: { testId, subhead, nickname1, nickname2, img, description, name },
       });
     },
     updateResult: (

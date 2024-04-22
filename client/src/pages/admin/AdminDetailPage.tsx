@@ -21,6 +21,7 @@ const AdminDetailPage = () => {
   });
   const navigate = useNavigate();
   console.log("data2", data);
+  console.log("params", params);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
@@ -32,10 +33,14 @@ const AdminDetailPage = () => {
       <h3>{params?.id ? "테스트 수정" : "테스트 생성"}</h3>
       <h3>테스트 정보</h3>
       <TestInfo data={data?.test} />
-      <h3>질문 목록</h3>
-      <QuestionTable data={data?.test?.questions} />
-      <h3>결과 목록</h3>
-      <ResultTable data={data?.test?.results} />
+      {!!params?.id && (
+        <>
+          <h3>질문 목록</h3>
+          <QuestionTable data={data?.test?.questions} />
+          <h3>결과 목록</h3>
+          <ResultTable data={data?.test?.results} />
+        </>
+      )}
     </div>
   );
 };

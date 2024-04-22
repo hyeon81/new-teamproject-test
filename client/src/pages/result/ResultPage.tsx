@@ -4,14 +4,13 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import mbti from "../../json/mbtiresult.json";
 import { AiOutlineLeft, AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
 import { BsPlusSquare } from "react-icons/bs";
 import "../global.css";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import React from "react";
 import { useQuery } from "@apollo/client";
-import { GET_TEST } from "../admin/graphql";
+import { GET_CALC_RESULT, GET_TEST, GET_TEST_INFO } from "../admin/graphql";
 
 function ResultPage() {
   let [searchParams] = useSearchParams();
@@ -20,27 +19,42 @@ function ResultPage() {
   const params = useParams();
   const input_name = searchParams.get("name");
 
-  const { loading, error, data } = useQuery(GET_TEST, {
+  const { data: testData } = useQuery(GET_TEST_INFO, {
     variables: { id: Number(params?.id) },
     skip: !params?.id,
   });
 
-  // let result = [
-  //   e >= 2 ? "E" : "I",
-  //   s >= 2 ? "S" : "N",
-  //   t >= 2 ? "T" : "F",
-  //   j >= 2 ? "J" : "P",
-  // ];
+  const { loading, error, data } = useQuery(GET_CALC_RESULT, {
+    variables: { testId: Number(params?.id), res: res },
+  });
+  const resultData = data?.calcResult;
+  const tempDes = resultData?.description
+    ? JSON.parse(resultData?.description)
+    : [];
+
+  const description =
+    typeof tempDes === "string"
+      ? tempDes
+          .replace(/\[|\]|\\/g, "")
+          .split(",")
+          .map((item) => item.trim().replace(/"/g, ""))
+      : [];
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
   return (
     <>
-      <div className="result-frame">
+      <div
+        className="result-frame"
+        style={{ backgroundColor: testData?.test?.backColor }}
+      >
         <div className="gnb">
           <div className="icon-right">
-            <button onClick={() => navigate(-1)}>
+            <button
+              onClick={() => navigate("/start/" + params?.id)}
+              style={{ backgroundColor: testData?.test?.backColor }}
+            >
               <AiOutlineLeft size="28" />
             </button>
           </div>
@@ -55,20 +69,18 @@ function ResultPage() {
               <h3>
                 <span>{input_name}</span>님의 모습은?
               </h3>
-              <h3>{mbti[count].nickname1}</h3>
-              <h2>{mbti[count].nickname2}</h2>
-              <p>{mbti[count].id}</p>
+
+              <h3>{resultData?.nickname1}</h3>
+              <h2>{resultData?.nickname2}</h2>
               <img
-                src={mbti[count].img}
+                src={resultData?.img}
                 alt="결과 이미지"
                 width="200px"
                 height="200px"
               />
               <div className="des">
-                <span>{mbti[count].subhead}</span>
-                {mbti[count].description.map((item) => (
-                  <li key={item.des}>{item.des}</li>
-                ))}
+                <span>{resultData?.subhead}</span>
+                {description?.map((item, idx) => <li key={idx}>{item}</li>)}
               </div>
             </div>
           </div>
@@ -77,9 +89,11 @@ function ResultPage() {
               text={window.location.toString()}
               onCopy={() => alert("공유 링크가 복사되었습니다!")}
             >
-              <button>결과 공유하기</button>
+              <button style={{ backgroundColor: testData?.test?.mainColor }}>
+                결과 공유하기
+              </button>
             </CopyToClipboard>
-            <Link to="/" style={{ textDecoration: "none" }}>
+            <Link to={`/start/${params.id}`} style={{ textDecoration: "none" }}>
               <button>다시 테스트 하기</button>
             </Link>
           </div>

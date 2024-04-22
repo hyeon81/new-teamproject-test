@@ -8,8 +8,8 @@ const typeDefs = gql`
     tests: [Test]
     result(id: Int!): Result
     results: [Result]
+    calcResult(testId: Int!, res: String!): Result
   }
-
   type Mutation {
     createQuestion(
       testId: Int!
@@ -60,23 +60,7 @@ const typeDefs = gql`
       description: String
     ): Result
     deleteResult(id: Int!): Result
-    addQuestionToTest(
-      testId: Int!
-      option: String!
-      question1: String!
-      question2: String!
-      answers: String!
-    ): Question!
-    addResultToTest(
-      testId: Int!
-      subhead: String!
-      nickname1: String!
-      nickname2: String!
-      img: String!
-      description: String!
-    ): Result!
   }
-
   type Question {
     id: Int!
     option: String!
@@ -98,6 +82,7 @@ const typeDefs = gql`
   type Result {
     id: Int!
     testId: Int!
+    name: String!
     subhead: String!
     nickname1: String!
     nickname2: String!

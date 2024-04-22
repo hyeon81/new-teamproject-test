@@ -124,7 +124,7 @@ export const QuestionTable = ({ data }: { data: IQuestion[] }) => {
               type="text"
               placeholder={key}
               disabled={key === "id"}
-              maxLength={key === "option" ? 1 : undefined}
+              maxLength={key === "option" ? 2 : undefined}
               value={formData[key]}
               onChange={(e) =>
                 handleInput(key, (e.target as HTMLInputElement).value)

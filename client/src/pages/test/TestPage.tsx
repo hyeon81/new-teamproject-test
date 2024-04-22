@@ -33,7 +33,7 @@ function TestPage() {
     if (len < questions?.length ?? 0)
       setNum(searchParams.get("res")?.length ?? 0);
     else {
-      navigate("/result/" + params?.id + searchParams.toString());
+      navigate("/result/" + params?.id + "?" + searchParams.toString());
     }
   }, [searchParams]);
 
@@ -70,7 +70,9 @@ function TestPage() {
         </div>
         <div className="wrap">
           <div className="question">
-            <h1>Q{questions?.[num]?.id}</h1>
+            <h1 style={{ color: data?.test?.backColor }}>
+              Q{questions?.[num]?.id}
+            </h1>
             <p>
               {questions?.[num]?.question1}
               <br />
