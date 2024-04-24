@@ -7,11 +7,9 @@ import { CREATE_TEST, UPDATE_TEST } from "../pages/admin/graphql";
 
 const TestInfo = ({ data }: { data: ITest }) => {
   const params = useParams();
-  console.log("params", params.id);
   const editMode = !!params?.id;
   const [createTest] = useMutation(CREATE_TEST);
   const [updateTest] = useMutation(UPDATE_TEST);
-  console.log("editMode", editMode);
   const [formData, setFormData] = useState<ITest>(
     data
       ? data
@@ -23,13 +21,11 @@ const TestInfo = ({ data }: { data: ITest }) => {
         },
   );
 
-  console.log("formData", formData);
   const handleInput = (key: string, value: string) => {
     setFormData({ ...formData, [key]: value });
   };
 
   const handleSubmit = async (e) => {
-    console.log("formData", formData);
     e.preventDefault();
     try {
       if (editMode) {

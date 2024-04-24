@@ -6,12 +6,13 @@ import {
   GET_TESTS,
   UPDATE_QUESTION,
 } from "./graphql";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import React from "react";
 import { QuestionTable } from "../../component/QuestionTable";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import ResultTable from "../../component/ResultTable";
 import TestInfo from "../../component/TestInfo";
+import { AdminContext } from "../../context/AdminContext";
 
 const AdminDetailPage = () => {
   const params = useParams();
@@ -20,12 +21,15 @@ const AdminDetailPage = () => {
     skip: !params?.id,
   });
   const navigate = useNavigate();
-  console.log("data2", data);
-  console.log("params", params);
+
+  const { isAdmin } = useContext(AdminContext);
+
+  useEffect(() => {
+    if (!isAdmin) navigate("/admin/login");
+  }, [isAdmin]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
-  console.log("data?.question", data?.test.questions);
   return (
     <div className="question-list">
       <h2>Admin Page</h2>

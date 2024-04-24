@@ -9,9 +9,7 @@ import {
 import { useParams } from "react-router-dom";
 
 export const QuestionTable = ({ data }: { data: IQuestion[] }) => {
-  console.log("data", data);
   const params = useParams();
-  console.log("prams", params?.id);
   const [formData, setFormData] = useState({
     id: "",
     option: "",
@@ -25,7 +23,6 @@ export const QuestionTable = ({ data }: { data: IQuestion[] }) => {
       content2: "",
     },
   ]);
-  console.log("answerData", answerData);
   const [edit, setEdit] = useState(false);
   const [updateQuestion] = useMutation(UPDATE_QUESTION);
   const [deleteQuestion] = useMutation(DELETE_QUESTION);
@@ -60,15 +57,7 @@ export const QuestionTable = ({ data }: { data: IQuestion[] }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("answerData2", answerData);
       if (!edit) {
-        console.log("createQuestion", {
-          option: formData.option,
-          question1: formData.question1,
-          question2: formData.question2,
-          answers: JSON.stringify(answerData),
-          testId: Number(params?.id),
-        });
         await createQuestion({
           variables: {
             option: formData.option,

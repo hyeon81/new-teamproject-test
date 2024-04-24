@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import {
   CREATE_QUESTION,
@@ -11,12 +11,17 @@ import { QuestionTable } from "../../component/QuestionTable";
 import React from "react";
 import { ITest } from "../../types/ITest";
 import { useNavigate } from "react-router-dom";
+import { AdminContext } from "../../context/AdminContext";
 
 function AdminPage() {
   const { loading, error, data } = useQuery(GET_TESTS);
   const tests: ITest[] = data?.tests;
   const navigate = useNavigate();
-  console.log("data", data);
+  const { isAdmin } = useContext(AdminContext);
+
+  useEffect(() => {
+    if (!isAdmin) navigate("/admin/login");
+  }, [isAdmin]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;

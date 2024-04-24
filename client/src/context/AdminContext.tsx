@@ -1,14 +1,20 @@
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useState,
+} from "react";
 
 export const AdminContext = createContext<{
   isAdmin: boolean;
-  setIsAdmin: (value: boolean) => void;
+  setIsAdmin: Dispatch<SetStateAction<boolean>>;
 }>({
   isAdmin: false,
-  setIsAdmin: (value: boolean) => {},
+  setIsAdmin: () => {},
 });
 
-const AdminProvider = ({ children }: { children: React.ReactNode }) => {
+export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   return (
@@ -17,5 +23,3 @@ const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     </AdminContext.Provider>
   );
 };
-
-export default AdminProvider;
