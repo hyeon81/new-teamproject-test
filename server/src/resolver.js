@@ -4,83 +4,91 @@ const client = new PrismaClient();
 
 export const resolvers = {
   Query: {
-    questions: () => {
-      return client.question.findMany();
+    questions: async () => {
+      return await client.question.findMany();
     },
-    question: (_, { id }) => {
-      return client.question.findUnique({ where: { id } });
+    question: async (_, { id }) => {
+      return await client.question.findUnique({ where: { id } });
     },
-    tests: () => {
+    tests: async () => {
       return (
-        client.test.findMany({
-          include: {
+        (await client.test.findMany({
+          select: {
             questions: true,
             results: true,
           },
-        }) || []
+        })) || []
       );
     },
-    test: (_, { id }) => {
-      return client.test.findUnique({
-        include: {
+    test: async (_, { id }) => {
+      return await client.test.findUnique({
+        select: {
           questions: true,
           results: true,
         },
         where: { id },
       });
     },
-    results: () => {
-      return client.result.findMany();
+    results: async () => {
+      return (await client.result.findMany()) || [];
     },
-    result: (_, { id }) => {
-      return client.result.findUnique({ where: { id } });
+    result: async (_, { id }) => {
+      return await client.result.findUnique({ where: { id } });
     },
     calcResult: async (_, { testId, res }) => {
-      // testId와 resQuery를 이용하여 데이터를 가져오는 로직을 작성한다.
-      // 예를 들어, testId와 resQuery를 이용하여 결과를 계산하고 반환한다.
-      const results = await client.result.findMany({
-        where: {
-          testId,
-        },
-      });
-      const questions = await client.question.findMany({
-        where: {
-          testId,
-        },
-        select: {
-          option: true,
-        },
-      });
-      const optionList = new Set(questions.map((question) => question.option));
-      const resultList = new Set(results);
-      let resCount = {};
-      for (let i = 0; i < res.length; i++) {
-        if (resCount[res[i]] === undefined) resCount[res[i]] = 1;
-        else resCount[res[i]] += 1;
-      }
+      try {
+        const results = await client.result.findMany({
+          where: {
+            testId,
+          },
+        });
+        const questions = await client.question.findMany({
+          where: {
+            testId,
+          },
+          select: {
+            option: true,
+          },
+        });
+        const optionList = new Set(
+          questions.map((question) => question.option),
+        );
+        const resultList = new Set(results);
+        let resCount = {};
+        for (let i = 0; i < res.length; i++) {
+          if (resCount[res[i]] === undefined) resCount[res[i]] = 1;
+          else resCount[res[i]] += 1;
+        }
 
-      let result = "";
-      optionList.forEach((option) => {
-        const option1 = option[0];
-        const option2 = option[1];
-        if (resCount[option1] > resCount[option2]) {
-          result += option1;
-        } else {
-          result += option2;
+        let result = "";
+        optionList.forEach((option) => {
+          const option1 = option[0];
+          const option2 = option[1];
+          if (resCount[option1] > resCount[option2]) {
+            result += option1;
+          } else {
+            result += option2;
+          }
+        });
+        const resultArr = [...result];
+        for (const r of resultList) {
+          if (resultArr.every((v) => r.name.includes(v))) {
+            return r;
+          }
         }
-      });
-      const resultArr = [...result];
-      for (const r of resultList) {
-        if (resultArr.every((v) => r.name.includes(v))) {
-          return r;
-        }
+        return null; // 결과가 없을 때 null 반환
+      } catch (error) {
+        console.error("Error in calcResult resolver:", error);
+        throw new Error("Failed to calculate result");
       }
-      return undefined;
     },
   },
   Mutation: {
-    createQuestion: (_, { testId, option, question1, question2, answers }) => {
-      return client.question.create({
+    createQuestion: async (
+      _,
+      { testId, option, question1, question2, answers },
+    ) => {
+      return await client.question.create({
         data: {
           option,
           question1,
@@ -90,17 +98,20 @@ export const resolvers = {
         },
       });
     },
-    updateQuestion: (_, { id, option, question1, question2, answers }) => {
-      return client.question.update({
+    updateQuestion: async (
+      _,
+      { id, option, question1, question2, answers },
+    ) => {
+      return await client.question.update({
         where: { id },
         data: { option, question1, question2, answers },
       });
     },
-    deleteQuestion: (_, { id }) => {
-      return client.question.delete({ where: { id } });
+    deleteQuestion: async (_, { id }) => {
+      return await client.question.delete({ where: { id } });
     },
-    createTest: (_, { title, description, mainColor, backColor }) => {
-      return client.test.create({
+    createTest: async (_, { title, description, mainColor, backColor }) => {
+      return await client.test.create({
         data: {
           title,
           description,
@@ -109,34 +120,34 @@ export const resolvers = {
         },
       });
     },
-    updateTest: (_, { id, title, description, mainColor, backColor }) => {
-      return client.test.update({
+    updateTest: async (_, { id, title, description, mainColor, backColor }) => {
+      return await client.test.update({
         where: { id },
         data: { title, description, mainColor, backColor },
       });
     },
-    deleteTest: (_, { id }) => {
-      return client.test.delete({ where: { id } });
+    deleteTest: async (_, { id }) => {
+      return await client.test.delete({ where: { id } });
     },
-    createResult: (
+    createResult: async (
       _,
       { testId, subhead, nickname1, nickname2, img, description, name },
     ) => {
-      return client.result.create({
+      return await client.result.create({
         data: { testId, subhead, nickname1, nickname2, img, description, name },
       });
     },
-    updateResult: (
+    updateResult: async (
       _,
       { id, testId, subhead, nickname1, nickname2, img, description },
     ) => {
-      return client.result.update({
+      return await client.result.update({
         where: { id },
         data: { testId, subhead, nickname1, nickname2, img, description },
       });
     },
-    deleteResult: (_, { id }) => {
-      return client.result.delete({ where: { id } });
+    deleteResult: async (_, { id }) => {
+      return await client.result.delete({ where: { id } });
     },
   },
 };

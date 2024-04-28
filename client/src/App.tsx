@@ -18,7 +18,7 @@ import { AdminContext, AdminProvider } from "./context/AdminContext";
 
 function App() {
   const client = new ApolloClient({
-    uri: "http://localhost:4000", // Apollo Server의 URL로 변경해야 합니다.
+    uri: process.env.REACT_APP_API_URL, // Apollo Server의 URL로 변경해야 합니다.
     cache: new InMemoryCache(),
   });
 
