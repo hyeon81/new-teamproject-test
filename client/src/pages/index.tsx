@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import { GET_TESTS } from "./admin/graphql";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "./index.css";
 
 const HomePage = () => {
   const { loading, error, data } = useQuery(GET_TESTS);

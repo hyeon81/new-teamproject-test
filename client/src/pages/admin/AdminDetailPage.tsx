@@ -1,18 +1,12 @@
-import { useMutation, useQuery } from "@apollo/client";
-import {
-  CREATE_QUESTION,
-  DELETE_QUESTION,
-  GET_TEST,
-  GET_TESTS,
-  UPDATE_QUESTION,
-} from "./graphql";
-import { useContext, useEffect, useState } from "react";
-import React from "react";
-import { QuestionTable } from "../../component/QuestionTable";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import React, { useContext, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { GET_TEST } from "./graphql";
 import ResultTable from "../../component/ResultTable";
 import TestInfo from "../../component/TestInfo";
 import { AdminContext } from "../../context/AdminContext";
+import { QuestionTable } from "../../component/QuestionTable";
+import "./AdminDetailPage.css";
 
 const AdminDetailPage = () => {
   const params = useParams();
@@ -21,7 +15,6 @@ const AdminDetailPage = () => {
     skip: !params?.id,
   });
   const navigate = useNavigate();
-
   const { isAdmin } = useContext(AdminContext);
 
   useEffect(() => {
@@ -30,8 +23,11 @@ const AdminDetailPage = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
+
   return (
-    <div className="question-list">
+    <div className="admin-detail-page-container">
+      {" "}
+      {/* 새로운 클래스를 추가합니다. */}
       <h2>Admin Page</h2>
       <button onClick={() => navigate("/admin")}>목록으로</button>
       <h3>{params?.id ? "테스트 수정" : "테스트 생성"}</h3>

@@ -1,6 +1,6 @@
 body {
     font: 14px "Century Gothic", Futura, sans-serif;
-    margin: 0px;
+    margin: 0;
 }
 
 ol, ul {
@@ -12,7 +12,7 @@ ol, ul {
     /*background-color: rgba(178, 199, 217, 1);*/
     width: 500px;
     height: 100vh;
-    margin: 0px auto;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -47,7 +47,7 @@ ol, ul {
 .title {
     display: flex;
     flex-direction: column;
-    margin: 0px auto;
+    margin: 0 auto;
     text-align: center;
 }
 
@@ -74,7 +74,7 @@ ol, ul {
     justify-content: center;
     text-align: center;
     margin: 2px auto -12px;
-    padding: 0px;
+    padding: 0;
     gap: 4px;
     border: none;
 }
@@ -168,6 +168,7 @@ ol, ul {
     border: none;
     transition: 0.2s;
     padding: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .question button:hover {
@@ -180,7 +181,7 @@ ol, ul {
     background-color: rgba(178, 199, 217, 1);
     width: 500px;
     height: 100%;
-    margin: 0px auto;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -279,7 +280,7 @@ ol, ul {
 .outcome p {
     font-size: 24px;
     font-weight: bold;
-    margin: 0px auto 18px;
+    margin: 0 auto 18px;
     /*color: #4a5b6a;*/
 }
 

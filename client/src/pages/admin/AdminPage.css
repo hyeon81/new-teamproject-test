@@ -1,0 +1,46 @@
+.admin-page-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-page-container h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.admin-page-container h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.admin-page-container button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.admin-page-container button:hover {
+    background-color: #0056b3;
+}
+
+.admin-page-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.admin-page-container th, .admin-page-container td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.admin-page-container th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}

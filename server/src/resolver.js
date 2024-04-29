@@ -5,35 +5,39 @@ const client = new PrismaClient();
 export const resolvers = {
   Query: {
     questions: async () => {
-      return await client.question.findMany();
+      const questions = await client.question.findMany();
+      return questions || [];
     },
     question: async (_, { id }) => {
-      return await client.question.findUnique({ where: { id } });
+      const question = await client.question.findUnique({ where: { id } });
+      return question || null; // question이 null인 경우 null 반환
     },
     tests: async () => {
-      return (
-        (await client.test.findMany({
-          select: {
-            questions: true,
-            results: true,
-          },
-        })) || []
-      );
+      const tests = await client.test.findMany({
+        include: {
+          questions: true,
+          results: true,
+        },
+      });
+      return tests || [];
     },
     test: async (_, { id }) => {
-      return await client.test.findUnique({
-        select: {
+      const test = await client.test.findUnique({
+        include: {
           questions: true,
           results: true,
         },
         where: { id },
       });
+      return test || null; // test가 null인 경우 null 반환
     },
     results: async () => {
-      return (await client.result.findMany()) || [];
+      const results = await client.result.findMany();
+      return results || [];
     },
     result: async (_, { id }) => {
-      return await client.result.findUnique({ where: { id } });
+      const result = await client.result.findUnique({ where: { id } });
+      return result || null; // result가 null인 경우 null 반환
     },
     calcResult: async (_, { testId, res }) => {
       try {
@@ -121,19 +125,19 @@ export const resolvers = {
       });
     },
     updateTest: async (_, { id, title, description, mainColor, backColor }) => {
-      return await client.test.update({
+      return client.test.update({
         where: { id },
         data: { title, description, mainColor, backColor },
       });
     },
     deleteTest: async (_, { id }) => {
-      return await client.test.delete({ where: { id } });
+      return client.test.delete({ where: { id } });
     },
     createResult: async (
       _,
       { testId, subhead, nickname1, nickname2, img, description, name },
     ) => {
-      return await client.result.create({
+      return client.result.create({
         data: { testId, subhead, nickname1, nickname2, img, description, name },
       });
     },
@@ -141,7 +145,7 @@ export const resolvers = {
       _,
       { id, testId, subhead, nickname1, nickname2, img, description },
     ) => {
-      return await client.result.update({
+      return client.result.update({
         where: { id },
         data: { testId, subhead, nickname1, nickname2, img, description },
       });

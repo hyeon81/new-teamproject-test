@@ -10,7 +10,7 @@ import "../global.css";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import React from "react";
 import { useQuery } from "@apollo/client";
-import { GET_CALC_RESULT, GET_TEST, GET_TEST_INFO } from "../admin/graphql";
+import { GET_CALC_RESULT, GET_TEST_INFO } from "../admin/graphql";
 
 function ResultPage() {
   let [searchParams] = useSearchParams();
@@ -35,10 +35,10 @@ function ResultPage() {
   const description =
     typeof tempDes === "string"
       ? tempDes
-          .replace(/\[|\]|\\/g, "")
+          .replace(/[[\]\\]/g, "")
           .split(",")
           .map((item) => item.trim().replace(/"/g, ""))
-      : [];
+      : tempDes;
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;

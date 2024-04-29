@@ -1,11 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import ResultPage from "./pages/result/ResultPage";
 import AdminPage from "./pages/admin/AdminPage";
@@ -14,7 +8,7 @@ import TestPage from "./pages/test/TestPage";
 import StartPage from "./pages/start/StartPage";
 import HomePage from "./pages";
 import AdminLogin from "./pages/admin/AdminLogin";
-import { AdminContext, AdminProvider } from "./context/AdminContext";
+import { AdminProvider } from "./context/AdminContext";
 
 function App() {
   const client = new ApolloClient({

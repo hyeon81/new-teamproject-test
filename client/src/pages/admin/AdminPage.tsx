@@ -1,17 +1,11 @@
-import { useContext, useEffect, useState } from "react";
-import { useQuery, useMutation, gql } from "@apollo/client";
-import {
-  CREATE_QUESTION,
-  DELETE_QUESTION,
-  GET_QUESTIONS,
-  GET_TESTS,
-  UPDATE_QUESTION,
-} from "./graphql";
-import { QuestionTable } from "../../component/QuestionTable";
-import React from "react";
-import { ITest } from "../../types/ITest";
+import { useContext, useEffect } from "react";
+import { useQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { AdminContext } from "../../context/AdminContext";
+import { GET_TESTS } from "./graphql";
+import { ITest } from "../../types/ITest";
+import "./AdminPage.css";
+import React from "react";
 
 function AdminPage() {
   const { loading, error, data } = useQuery(GET_TESTS);
@@ -27,11 +21,11 @@ function AdminPage() {
   if (error) return <p>Error :(</p>;
 
   return (
-    <div>
+    <div className="admin-page-container">
       <h1>Admin</h1>
       <h2>테스트 목록</h2>
       <button onClick={() => navigate("/admin/create")}>테스트 생성</button>
-      <table style={{ width: "100%" }}>
+      <table>
         <thead>
           <tr>
             <th>ID</th>
@@ -50,13 +44,13 @@ function AdminPage() {
                   {test?.title}
                 </div>
               </td>
-              <td>{test?.description}</td>
               <td style={{ backgroundColor: test?.mainColor }}>
                 {test?.mainColor}
               </td>
               <td style={{ backgroundColor: test?.backColor }}>
                 {test?.backColor}
               </td>
+              <td>{test?.description}</td>
             </tr>
           ))}
         </tbody>
